@@ -6,7 +6,6 @@ var IMG_WIDTH = 640;
 var IMG_HEIGHT = 360;
 
 var client  = arDrone.createClient();
-client.takeoff();
 client.config('general:navdata_demo', 'FALSE');
 
 var pngStream = client.createPngStream();
