@@ -19,11 +19,13 @@ function readDirectory(dir, output) {
     var ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, PATCH_SIZE, PATCH_SIZE);
 
-    var descriptor = hog.extractHOG(canvas);
+    var descriptor = hog.extractHOG(canvas, {
+      cellSize: 6
+    });
 
     trainData.push({
       input: descriptor,
-      output: output
+      output: [output]
     });
   });
 }
@@ -32,5 +34,8 @@ readDirectory("/home/tim/train/false/", 0);
 readDirectory("/home/tim/train/true/", 1);
 
 var net = new brain.NeuralNetwork();
+console.log("training...");
 net.train(trainData);
+
+console.log("writing...");
 fs.writeFile("net.json", JSON.stringify(net.toJSON()));
