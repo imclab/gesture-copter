@@ -28,21 +28,25 @@ function check(img) {
     width -= 40;
     height = width / aspect;
 
-    checkCanvas(img, canvas);
+    checkCanvas(canvas);
   }
 }
 
-function checkCanvas(img, canvas) {
+function checkCanvas(canvas) {
   for (var y = 0; (y + PATCH_SIZE) <= canvas.height;) {
     for (var x = 0; (x + PATCH_SIZE) <= canvas.width; x += 10) {
-      var canvas = new Canvas(PATCH_SIZE, PATCH_SIZE);
-      var ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, PATCH_SIZE, PATCH_SIZE, x, y, PATCH_SIZE, PATCH_SIZE);
+      var canvas2 = new Canvas(PATCH_SIZE, PATCH_SIZE);
+      var ctx = canvas2.getContext('2d');
+      ctx.drawImage(canvas, 0, 0, PATCH_SIZE, PATCH_SIZE, x, y, PATCH_SIZE, PATCH_SIZE);
 
-      var descriptor = hog.extractHOG(canvas, {
+      var descriptor = hog.extractHOG(canvas2, {
         cellSize: 6
       });
-      console.log(net.run(descriptor));
+
+      var output = net.run(descriptor);
+      if (output > 0.3) {
+        console.log(output);
+      }
     }
 
     if (y + PATCH_SIZE == canvas.height) {
