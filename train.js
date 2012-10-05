@@ -20,7 +20,7 @@ function readDirectory(dir, output) {
     ctx.drawImage(img, 0, 0, PATCH_SIZE, PATCH_SIZE);
 
     var descriptor = hog.extractHOG(canvas, {
-      cellSize: 6,
+      cellSize: 5,
       blockSize: 2,
       blockStride: 1,
       bins: 6,
