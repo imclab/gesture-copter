@@ -40,11 +40,15 @@ function checkCanvas(canvas) {
       ctx.drawImage(canvas, 0, 0, PATCH_SIZE, PATCH_SIZE, x, y, PATCH_SIZE, PATCH_SIZE);
 
       var descriptor = hog.extractHOG(canvas2, {
-        cellSize: 6
+        cellSize: 6,
+        blockSize: 2,
+        blockStride: 1,
+        bins: 6,
+        norm: "L2"
       });
 
       var output = net.run(descriptor);
-      if (output > 0.3) {
+      if (output > 0.5) {
         console.log(output);
       }
     }
@@ -59,28 +63,5 @@ function checkCanvas(canvas) {
   }
 }
 
-var last = 0;
-var pngStream = client.createPngStream();
-pngStream.on('data', function (data) {
-  if (last + 1000 > Date.now()) {
-    return;
-  }
 
-  var img = new Canvas.Image;
-  img.src = data;
-
-  /*var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT);
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, IMG_WIDTH, IMG_HEIGHT);*/
-
-  check(img);
-
-  /*var descriptor = hog.extractHOG(canvas);
-  console.log(descriptor); // [0.455, 0.003, 0.987, ...]*/
-
-  /*canvas.toDataURL('image/png', function (err, str) {
-    console.log(str + "\n\n");
-  });*/
-
-  last = Date.now();
-});
+client.createRepl();

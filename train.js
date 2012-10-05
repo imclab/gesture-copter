@@ -20,7 +20,11 @@ function readDirectory(dir, output) {
     ctx.drawImage(img, 0, 0, PATCH_SIZE, PATCH_SIZE);
 
     var descriptor = hog.extractHOG(canvas, {
-      cellSize: 6
+      cellSize: 6,
+      blockSize: 2,
+      blockStride: 1,
+      bins: 6,
+      norm: "L2"
     });
 
     trainData.push({
@@ -33,9 +37,15 @@ function readDirectory(dir, output) {
 readDirectory("/home/tim/train/false/", 0);
 readDirectory("/home/tim/train/true/", 1);
 
-var net = new brain.NeuralNetwork();
+var net = new brain.NeuralNetwork({
+  hiddenLayers: [30]
+});
+
 console.log("training...");
-net.train(trainData);
+net.train(trainData, {
+  errorThresh: 0.0004,  // error threshold to reach
+  iterations: 20000,   // maximum training iterations
+});
 
 console.log("writing...");
 fs.writeFile("net.json", JSON.stringify(net.toJSON()));
